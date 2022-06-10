@@ -1,13 +1,13 @@
-import { Fragment } from "react";
 import List from "../components/list/List";
-import Input from "../components/input/input";
+import Input from "../components/input/Input";
+import Layout from "../components/ui/Layout";
 
 const MainPage = () => {
   return (
-    <Fragment>
+    <Layout>
       <List />
       <Input />
-    </Fragment>
+    </Layout>
   );
 };
 
