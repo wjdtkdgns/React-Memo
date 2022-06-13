@@ -1,27 +1,23 @@
-import axios from "axios";
 import { useQuery } from "react-query";
 import { useSetRecoilState } from "recoil";
 import { fetchingStatus } from "../store/recoil/Status";
+import axios from "axios";
 
-// 전부
 const fetchList = () => {
-  return axios.get("https://jsonplaceholder.typicode.com/posts");
+  return axios.get("https://test-83dac-default-rtdb.firebaseio.com/test.json");
 };
 
-const useLists = () => {
+export const useLists = () => {
   const setStatus = useSetRecoilState(fetchingStatus);
 
-  const { status, data, error } = useQuery("Lists", fetchList);
-  if (status === "loading") {
-    setStatus("LOADING");
-    return null;
-  }
-  if (status === "error") {
-    setStatus("ERROR");
-    alert(error);
-    return null;
-  }
+  const { data } = useQuery("Lists", fetchList, {
+    retry: 0,
+    onSuccess: () => {
+      setStatus("SUCCESS");
+    },
+    onError: () => {
+      setStatus("ERROR");
+    },
+  });
   return data;
 };
-
-export default useLists;

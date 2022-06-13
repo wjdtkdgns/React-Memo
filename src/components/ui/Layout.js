@@ -11,4 +11,5 @@ const Box = styled.div`
 
   margin: auto auto;
   display: flex;
+  flex-direction: column;
 `;

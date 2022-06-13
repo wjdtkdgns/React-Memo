@@ -1,21 +1,28 @@
 // 데이터 표시
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import useLists from "../../hooks/usePosts";
+import { useLists } from "../../hooks/usePosts";
+import { fetchingStatus } from "../../store/recoil/Status";
 
 const List = () => {
+  const loadingStatus = useRecoilValue(fetchingStatus);
   const data = useLists();
   return (
     <ListBox>
-      {data?.data.map((data) => (
-        <div key={data.id}>
-          <p>
-            <span>
-              {data.id} {data.title}
-            </span>
-          </p>
-          <p>{data.body}</p>
-        </div>
-      ))}
+      {loadingStatus === "LOADING" ? <p>Loading...</p> : ""}
+      {loadingStatus === "ERROR" ? <p>Error</p> : ""}
+      {loadingStatus === "SUCCESS"
+        ? data?.data.map((data) => (
+            <div key={data.id}>
+              <p>
+                <span>
+                  {data.id} {data.title}
+                </span>
+              </p>
+              <p>{data.body}</p>
+            </div>
+          ))
+        : ""}
     </ListBox>
   );
 };
