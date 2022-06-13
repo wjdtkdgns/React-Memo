@@ -1,6 +1,4 @@
 import { useQuery } from "react-query";
-import { useSetRecoilState } from "recoil";
-import { fetchingStatus } from "../store/recoil/Status";
 import axios from "axios";
 
 const fetchList = () => {
@@ -8,16 +6,8 @@ const fetchList = () => {
 };
 
 export const useLists = () => {
-  const setStatus = useSetRecoilState(fetchingStatus);
-
-  const { data } = useQuery("Lists", fetchList, {
-    retry: 0,
-    onSuccess: () => {
-      setStatus("SUCCESS");
-    },
-    onError: () => {
-      setStatus("ERROR");
-    },
+  const { refetch, status, data } = useQuery("Lists", fetchList, {
+    refetchOnWindowFocus: false,
   });
-  return data;
+  return { refetch, status, data };
 };

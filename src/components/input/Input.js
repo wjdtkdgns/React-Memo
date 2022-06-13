@@ -1,55 +1,18 @@
 //  데이터 추가용
 import { useState } from "react";
 import styled from "styled-components";
-import { useMutation, useQueryClient } from "react-query";
-import { useSetRecoilState } from "recoil";
-import { fetchingStatus } from "../../store/recoil/Status";
-import axios from "axios";
+import { useMutate } from "../../hooks/useMutate";
 
-const fetching = (props) => {
-  const data = {
-    title: props.title,
-    body: props.body,
-    id: props.id,
-  };
-  return axios.put(
-    `https://test-83dac-default-rtdb.firebaseio.com/test/${props.id - 1}.json`,
-    data
-  );
-};
-
-const Input = () => {
+const Input = (props) => {
   const [id, setId] = useState("");
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
 
-  const queryClient = useQueryClient();
-  const setStatus = useSetRecoilState(fetchingStatus);
-
-  const { mutate } = useMutation(
-    (props) => fetching({ title: props.title, body: props.body, id: props.id }),
-    {
-      retry: 0,
-      onMutate: () => {
-        setStatus("LOADING");
-      },
-      onSuccess: () => {
-        // 쿼리 무효화 안하면 list 업로드가 안됨
-        // 캐시가 있는 모든 쿼리 무효화
-        queryClient.invalidateQueries();
-        // queryKey가 'Lists'로 시작하는 모든 쿼리 무효화
-        queryClient.invalidateQueries("Lists");
-        setStatus("SUCCESS");
-      },
-      onError: () => {
-        setStatus("ERROR");
-      },
-    }
-  );
-
+  const mutation = useMutate({ id: null });
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    mutate({ title, body, id });
+    mutation.mutate({ title, body, id, mode: "ADD" });
+    props.refetch();
     setId("");
     setTitle("");
     setBody("");

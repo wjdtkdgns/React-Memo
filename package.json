@@ -11,7 +11,6 @@
     "react-dom": "^18.1.0",
     "react-query": "^3.39.1",
     "react-scripts": "5.0.1",
-    "recoil": "^0.7.3",
     "styled-component": "^2.8.0",
     "styled-components": "^5.3.5",
     "web-vitals": "^2.1.4"

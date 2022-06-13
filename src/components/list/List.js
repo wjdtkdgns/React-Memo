@@ -1,24 +1,19 @@
 // 데이터 표시
 import { useState } from "react";
-import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { useLists } from "../../hooks/useLists";
-import { fetchingStatus } from "../../store/recoil/Status";
 import ChangeInput from "../input/ChangeInput";
 
-const List = () => {
+const List = (props) => {
   const [isCorrected, setIsCorrected] = useState(-1);
-  const loadingStatus = useRecoilValue(fetchingStatus);
-
-  const data = useLists();
-  console.log(loadingStatus, data);
 
   return (
     <ListBox>
-      {loadingStatus === "LOADING" ? <p>Loading...</p> : ""}
-      {loadingStatus === "ERROR" ? <p>Error</p> : ""}
-      {loadingStatus === "SUCCESS"
-        ? data?.data
+      <button onClick={props.refetch}>refetch</button>
+      {/* 임시 */}
+      {props.status === "loading" ? <p>Loading...</p> : ""}
+      {props.status === "error" ? <p>Error</p> : ""}
+      {props.status === "success"
+        ? props.data?.data
             .filter((data) => data !== null)
             .map((data) => (
               <div key={data.id}>
@@ -38,7 +33,11 @@ const List = () => {
                   change
                 </button>
                 {isCorrected === data.id && (
-                  <ChangeInput setIsCorrected={setIsCorrected} id={data.id} />
+                  <ChangeInput
+                    setIsCorrected={setIsCorrected}
+                    refetch={props.refetch}
+                    id={data.id}
+                  />
                 )}
               </div>
             ))
