@@ -6,16 +6,13 @@ import { useMutate } from "../../hooks/useMutate";
 const Input = (props) => {
   const [id, setId] = useState("");
   const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
 
   const mutation = useMutate({ id: null });
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    mutation.mutate({ title, body, id, mode: "ADD" });
-    props.refetch();
+    mutation.mutate({ title, id, mode: "ADD" });
     setId("");
     setTitle("");
-    setBody("");
   };
 
   return (
@@ -27,12 +24,6 @@ const Input = (props) => {
         id="title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-      ></input>
-      <label htmlFor="body">body</label>
-      <input
-        id="body"
-        value={body}
-        onChange={(e) => setBody(e.target.value)}
       ></input>
       <button onClick={onSubmitHandler}>Submit</button>
     </InputBox>

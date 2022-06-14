@@ -3,42 +3,54 @@ import axios from "axios";
 
 const fetching = (props) => {
   if (props.mode === "DELETE") {
-    return axios.delete(
-      `https://test-83dac-default-rtdb.firebaseio.com/test/${props.id - 1}.json`
-    );
+    return axios
+      .delete(`https://dummyjson.com/posts/${props.id}`)
+      .then(console.log);
   }
-  const data = {
-    title: props.title,
-    body: props.body,
-    id: props.id,
-  };
-  return axios.put(
-    `https://test-83dac-default-rtdb.firebaseio.com/test/${props.id - 1}.json`,
-    data
-  );
+  if (props.mode === "ADD") {
+    return axios
+      .post(
+        `https://dummyjson.com/posts/add`,
+        JSON.stringify({
+          title: props.title,
+          userId: 1,
+        }),
+        {
+          headers: { "Content-type": "application/json; charset=UTF-8" },
+        }
+      )
+      .then(console.log);
+  }
+  if (props.mode === "CHANGE")
+    return axios
+      .put(
+        `https://dummyjson.com/posts/${props.id}`,
+        JSON.stringify({
+          title: props.title,
+        }),
+        {
+          headers: { "Content-type": "application/json; charset=UTF-8" },
+        }
+      )
+      .then(console.log);
 };
 
 export const useMutate = (props) => {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation(
+  return useMutation(
     (data) => {
       const id = props.id === null ? data.id : props.id;
       fetching({
         title: data.title,
-        body: data.body,
         id,
         mode: data.mode,
       });
     },
     {
-      onSuccess: (data) => {
-        // 쿼리 무효화 안하면 list 업로드가 안됨
-        // queryKey가 'Lists'로 시작하는 모든 쿼리 무효화'
-        console.log(data);
-        queryClient.invalidateQueries({ refetchActive: true });
+      onSuccess: () => {
+        queryClient.invalidateQueries("Posts");
       },
     }
   );
-  return mutation;
 };

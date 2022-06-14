@@ -5,22 +5,19 @@ import { useMutate } from "../../hooks/useMutate";
 
 const ChangeInput = (props) => {
   const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
 
   const mutation = useMutate({ id: props.id });
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
     props.setIsCorrected(-1);
-    mutation.mutate({ title, body, mode: "CHANGE" });
-    props.refetch();
+    mutation.mutate({ title, mode: "CHANGE" });
   };
 
   const onDeleteHandler = (e) => {
     e.preventDefault();
     props.setIsCorrected(-1);
-    mutation.mutate({ title, body, mode: "DELETE" });
-    props.refetch();
+    mutation.mutate({ title, mode: "DELETE" });
   };
 
   return (
@@ -30,12 +27,6 @@ const ChangeInput = (props) => {
         id="title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-      ></input>
-      <label htmlFor="body">body</label>
-      <input
-        id="body"
-        value={body}
-        onChange={(e) => setBody(e.target.value)}
       ></input>
       <button onClick={onSubmitHandler}>Submit</button>
       <button onClick={onDeleteHandler}>Delete</button>
